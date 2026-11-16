@@ -7,7 +7,7 @@ MCP-сервер для [hh.ru](https://hh.ru): поиск вакансий, с�
 ## Установка
 
 ```bash
-npx -y @svedum/mcp-hh-ru@0.1.0
+npx -y @svedum/mcp-hh-ru@0.1.1
 ```
 
 ### Cursor / Claude Desktop
@@ -17,7 +17,7 @@ npx -y @svedum/mcp-hh-ru@0.1.0
   "mcpServers": {
     "hh-ru": {
       "command": "npx",
-      "args": ["-y", "@svedum/mcp-hh-ru@0.1.0"],
+      "args": ["-y", "@svedum/mcp-hh-ru@0.1.1"],
       "env": {
         "HH_TOKEN": "your-oauth-access-token",
         "HH_UA_EMAIL": "you@example.com"
@@ -31,11 +31,12 @@ npx -y @svedum/mcp-hh-ru@0.1.0
 отклики, `/me` и кабинет работодателя — только с токеном пользователя.
 
 Токен: приложение на [dev.hh.ru/admin](https://dev.hh.ru/admin) → OAuth
-authorization code → `access_token`. В Сведуме вход через OAuth приложения
-продукта (платформа хранит секрет, на компьютер уходит только access token).
+authorization code → `access_token`. В [Сведуме](https://svedum.ru/dev) вход
+через OAuth приложения продукта (платформа хранит секрет, на компьютер уходит
+только access token).
 
 `HH-User-Agent` обязателен у hh.ru: задайте `HH_USER_AGENT` целиком или
-`HH_UA_EMAIL` (по умолчанию `support@svedum.ru`).
+контактный `HH_UA_EMAIL` (без дефолта — один из двух обязателен).
 
 ## Инструменты
 

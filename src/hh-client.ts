@@ -18,14 +18,19 @@ export class HhApiError extends Error {
 }
 
 /**
- * hh.ru rejects requests without a contact User-Agent. Prefer HH_USER_AGENT;
- * otherwise AppName/Version (email).
+ * hh.ru rejects requests without a contact User-Agent.
+ * Set HH_USER_AGENT as a full string, or HH_UA_EMAIL to build `mcp-hh-ru/<ver> (email)`.
  */
 export function resolveUserAgent(env: NodeJS.ProcessEnv = process.env): string {
   const custom = env.HH_USER_AGENT?.trim();
   if (custom) return custom;
-  const email = env.HH_UA_EMAIL?.trim() || "support@svedum.ru";
-  return `SvedumMcpHhRu/0.1.0 (${email})`;
+  const email = env.HH_UA_EMAIL?.trim();
+  if (!email) {
+    throw new Error(
+      "Set HH_USER_AGENT (full User-Agent) or HH_UA_EMAIL (contact email for HH-User-Agent).",
+    );
+  }
+  return `mcp-hh-ru/0.1.1 (${email})`;
 }
 
 function buildUrl(path: string, query?: HhQuery): string {

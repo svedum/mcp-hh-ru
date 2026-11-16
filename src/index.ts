@@ -40,7 +40,7 @@ async function optionalToken(): Promise<string | undefined> {
 
 const server = new McpServer({
   name: "mcp-hh-ru",
-  version: "0.1.0",
+  version: "0.1.1",
 });
 
 server.tool(

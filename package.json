@@ -1,6 +1,6 @@
 {
   "name": "@svedum/mcp-hh-ru",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "MCP server for hh.ru: vacancy search, own resumes, negotiations (applicant and employer)",
   "type": "module",
   "license": "MIT",
@@ -20,8 +20,7 @@
     "hh.ru",
     "headhunter",
     "vacancies",
-    "resumes",
-    "svedum"
+    "resumes"
   ],
   "bin": {
     "mcp-hh-ru": "dist/index.js"
