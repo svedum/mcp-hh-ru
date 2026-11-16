@@ -24,7 +24,7 @@
     "svedum"
   ],
   "bin": {
-    "mcp-hh-ru": "./dist/index.js"
+    "mcp-hh-ru": "dist/index.js"
   },
   "files": [
     "dist",
