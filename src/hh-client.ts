@@ -30,7 +30,7 @@ export function resolveUserAgent(env: NodeJS.ProcessEnv = process.env): string {
       "Set HH_USER_AGENT (full User-Agent) or HH_UA_EMAIL (contact email for HH-User-Agent).",
     );
   }
-  return `mcp-hh-ru/0.1.1 (${email})`;
+  return `mcp-hh-ru/0.2.0 (${email})`;
 }
 
 function buildUrl(path: string, query?: HhQuery): string {

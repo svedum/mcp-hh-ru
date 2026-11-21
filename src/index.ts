@@ -40,7 +40,7 @@ async function optionalToken(): Promise<string | undefined> {
 
 const server = new McpServer({
   name: "mcp-hh-ru",
-  version: "0.1.1",
+  version: "0.2.0",
 });
 
 server.tool(
@@ -119,7 +119,7 @@ server.tool(
 
 server.tool(
   "get_employer",
-  "Employer (company) card by id.",
+  "Employer (company) card by id — public company profile, not the employer cabinet.",
   { employer_id: z.string() },
   async (args) => {
     try {
@@ -175,7 +175,7 @@ server.tool(
 
 server.tool(
   "get_me",
-  "Current hh.ru account (/me): applicant and/or employer manager.",
+  "Current hh.ru applicant account (/me). Needs HH_TOKEN.",
   {},
   async () => {
     try {
@@ -189,7 +189,7 @@ server.tool(
 
 server.tool(
   "list_mine_resumes",
-  "Resumes of the signed-in applicant.",
+  "Resumes of the signed-in applicant. Needs HH_TOKEN.",
   {},
   async () => {
     try {
@@ -203,7 +203,7 @@ server.tool(
 
 server.tool(
   "get_resume",
-  "One resume by id (own resume, or a viewed resume for an employer).",
+  "One of the applicant's own resumes by id. Needs HH_TOKEN.",
   { resume_id: z.string() },
   async (args) => {
     try {
@@ -219,11 +219,10 @@ server.tool(
 
 server.tool(
   "list_negotiations",
-  "Negotiations (applications / responses). Applicant: own applications. Employer manager: responses to vacancies.",
+  "Applicant's negotiations (applications / responses). Needs HH_TOKEN.",
   {
     page: z.number().int().min(0).optional(),
     per_page: z.number().int().min(1).max(50).optional(),
-    vacancy_id: z.string().optional().describe("Employer: filter by vacancy"),
   },
   async (args) => {
     try {
@@ -235,7 +234,6 @@ server.tool(
           query: {
             page: args.page ?? 0,
             per_page: args.per_page ?? 20,
-            vacancy_id: args.vacancy_id,
           },
         }),
       );
@@ -247,7 +245,7 @@ server.tool(
 
 server.tool(
   "get_negotiation",
-  "One negotiation (application) by id, including messages when available.",
+  "One applicant negotiation by id, including messages when available. Needs HH_TOKEN.",
   { negotiation_id: z.string() },
   async (args) => {
     try {
@@ -256,84 +254,6 @@ server.tool(
         await hhFetch({
           path: `/negotiations/${args.negotiation_id}`,
           token,
-        }),
-      );
-    } catch (error) {
-      return errorResult(error);
-    }
-  },
-);
-
-server.tool(
-  "list_employer_vacancies",
-  "Vacancies of the employer the signed-in manager belongs to (active by default).",
-  {
-    employer_id: z
-      .string()
-      .optional()
-      .describe("Defaults to employer.id from /me"),
-    page: z.number().int().min(0).optional(),
-    per_page: z.number().int().min(1).max(50).optional(),
-    archived: z.boolean().optional().describe("If true, list archived"),
-  },
-  async (args) => {
-    try {
-      const token = await requireAccessToken();
-      let employerId = args.employer_id;
-      if (!employerId) {
-        const me = await hhFetch<{
-          employer?: { id?: string };
-        }>({ path: "/me", token });
-        employerId = me.employer?.id;
-      }
-      if (!employerId) {
-        return errorResult(
-          new Error(
-            "No employer on this account. Sign in as an employer manager on hh.ru.",
-          ),
-        );
-      }
-      const suffix = args.archived ? "archived" : "active";
-      return textResult(
-        await hhFetch({
-          path: `/employers/${employerId}/vacancies/${suffix}`,
-          token,
-          query: {
-            page: args.page ?? 0,
-            per_page: args.per_page ?? 20,
-          },
-        }),
-      );
-    } catch (error) {
-      return errorResult(error);
-    }
-  },
-);
-
-server.tool(
-  "search_resumes",
-  "Employer resume search. Needs an employer account with resume-database access; applicants get 403.",
-  {
-    text: z.string().optional(),
-    area: z.union([z.string(), z.number()]).optional(),
-    experience: z.string().optional(),
-    page: z.number().int().min(0).optional(),
-    per_page: z.number().int().min(1).max(50).optional(),
-  },
-  async (args) => {
-    try {
-      const token = await requireAccessToken();
-      return textResult(
-        await hhFetch({
-          path: "/resumes",
-          token,
-          query: {
-            text: args.text,
-            area: args.area,
-            experience: args.experience,
-            page: args.page ?? 0,
-            per_page: args.per_page ?? 20,
-          },
         }),
       );
     } catch (error) {

@@ -1,13 +1,14 @@
 # `@svedum/mcp-hh-ru`
 
-MCP-сервер для [hh.ru](https://hh.ru): поиск вакансий, свои резюме, отклики
-(соискатель и работодатель). Работает по stdio — в Сведуме, Cursor, Claude Desktop
-и любом MCP-клиенте.
+MCP-сервер для [hh.ru](https://hh.ru): поиск вакансий, свои резюме и отклики
+**соискателя**. Работает по stdio — в Сведуме, Cursor, Claude Desktop и любом
+MCP-клиенте. Кабинет работодателя в этой версии не входит (вернём после
+OAuth-приложения).
 
 ## Установка
 
 ```bash
-npx -y @svedum/mcp-hh-ru@0.1.1
+npx -y @svedum/mcp-hh-ru@0.2.0
 ```
 
 ### Cursor / Claude Desktop
@@ -17,9 +18,8 @@ npx -y @svedum/mcp-hh-ru@0.1.1
   "mcpServers": {
     "hh-ru": {
       "command": "npx",
-      "args": ["-y", "@svedum/mcp-hh-ru@0.1.1"],
+      "args": ["-y", "@svedum/mcp-hh-ru@0.2.0"],
       "env": {
-        "HH_TOKEN": "your-oauth-access-token",
         "HH_UA_EMAIL": "you@example.com"
       }
     }
@@ -28,12 +28,11 @@ npx -y @svedum/mcp-hh-ru@0.1.1
 ```
 
 Поиск вакансий, справочники и карточки работают **без токена**. Свои резюме,
-отклики, `/me` и кабинет работодателя — только с токеном пользователя.
+отклики и `/me` — с `HH_TOKEN` (OAuth access token пользователя).
 
-Токен: приложение на [dev.hh.ru/admin](https://dev.hh.ru/admin) → OAuth
-authorization code → `access_token`. В [Сведуме](https://svedum.ru/dev) вход
-через OAuth приложения продукта (платформа хранит секрет, на компьютер уходит
-только access token).
+Токен (опционально): приложение на [dev.hh.ru/admin](https://dev.hh.ru/admin) →
+OAuth authorization code → `access_token`. В env: `HH_TOKEN` и
+`HH_UA_EMAIL` (или полный `HH_USER_AGENT`).
 
 `HH-User-Agent` обязателен у hh.ru: задайте `HH_USER_AGENT` целиком или
 контактный `HH_UA_EMAIL` (без дефолта — один из двух обязателен).
@@ -45,25 +44,23 @@ authorization code → `access_token`. В [Сведуме](https://svedum.ru/dev
 | `search_vacancies` | нет* | все |
 | `get_vacancy` | нет* | все |
 | `get_similar_vacancies` | нет* | все |
-| `get_employer` | нет* | все |
+| `get_employer` | нет* | все (карточка компании) |
 | `get_areas` | нет | все |
 | `get_dictionaries` | нет | все |
 | `get_professional_roles` | нет | все |
-| `get_me` | да | соискатель / менеджер |
+| `get_me` | да | соискатель |
 | `list_mine_resumes` | да | соискатель |
-| `get_resume` | да | соискатель / работодатель |
-| `list_negotiations` | да | оба |
-| `get_negotiation` | да | оба |
-| `list_employer_vacancies` | да | работодатель |
-| `search_resumes` | да | работодатель (база резюме) |
+| `get_resume` | да | соискатель |
+| `list_negotiations` | да | соискатель |
+| `get_negotiation` | да | соискатель |
 
 \* без токена — публичная выдача; с токеном hh может персонализировать.
 
 ## [Сведум](https://svedum.ru/dev)
 
-Плагин каталога `hh-ru` запускает этот пакет через npm-раннер приложения
-и входит через OAuth (`clientRef: hh-ru`). Для внешних клиентов
-достаточно `HH_TOKEN` в env.
+Плагин каталога `hh-ru` запускает этот пакет через npm-раннер приложения.
+Публичный поиск работает без входа; личные резюме и отклики — когда появится
+OAuth приложения или через `HH_TOKEN` во внешних клиентах.
 
 ## Разработка
 

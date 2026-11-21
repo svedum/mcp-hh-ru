@@ -1,7 +1,7 @@
 {
   "name": "@svedum/mcp-hh-ru",
-  "version": "0.1.1",
-  "description": "MCP server for hh.ru: vacancy search, own resumes, negotiations (applicant and employer)",
+  "version": "0.2.0",
+  "description": "MCP server for hh.ru applicants: vacancy search, own resumes, negotiations",
   "type": "module",
   "license": "MIT",
   "author": "Svedum",
